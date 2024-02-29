@@ -15,16 +15,9 @@ class Cliente:
 
     def solicitar_reserva(self, fecha, hora, numero_personas):
         # Simula la solicitud de una nueva reserva
-        id_reserva = len(self.reservas) + 1  # Genera un ID simple para la demostración
-        self.agregar_reserva(fecha, hora, numero_personas, id_reserva)
-        print(f"Reserva solicitada para {numero_personas} personas el {fecha} a las {hora}. ID de reserva: {id_reserva}")
+        return f"Reserva solicitada para {numero_personas} personas el {fecha} a las {hora}."
 
     def pedir_informacion(self):
         # Imprime la información del cliente y todas sus reservas
-        print(f"Información del Cliente: {self.nombre}, Email: {self.correo_electronico}, Teléfono: {self.telefono}")
-        if self.reservas:
-            print("Reservas:")
-            for reserva in self.reservas:
-                print(f"  ID: {reserva.id_reserva}, Fecha: {reserva.fecha}, Hora: {reserva.hora}, Número de Personas: {reserva.numero_personas}")
-        else:
-            print("No hay reservas actualmente.")
+        return f"Información del Cliente: {self.nombre}, Email: {self.correo_electronico}, Teléfono: {self.telefono}"
+        

@@ -25,4 +25,4 @@ class Reserva:
         # Marca todas las mesas asignadas a la reserva como disponibles nuevamente
         for mesa in self.mesas:
             mesa.disponible = True
-        print(f"Reserva {self.id_reserva} marcada como no cumplida. Todas las mesas han sido liberadas y están disponibles.")
+        return f"Reserva {self.id_reserva} marcada como no cumplida. Todas las mesas han sido liberadas y están disponibles."
