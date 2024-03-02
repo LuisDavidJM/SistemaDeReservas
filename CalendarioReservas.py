@@ -7,13 +7,13 @@ class CalendarioReservas:
         self.id_calendario = id_calendario
         self.reservas = []  # Esta será una lista de instancias de Reserva
 
+    # Agrega una nueva reserva al calendario, creando y almacenando una instancia de Reserva.
     def agregar_reserva(self, fecha, hora, numero_personas, id_reserva):
-        # Crear una nueva instancia de Reserva y agregarla a la lista de reservas
         nueva_reserva = Reserva(fecha, hora, numero_personas, id_reserva)
         self.reservas.append(nueva_reserva)
 
+    # Busca una reserva por su ID y devuelve los detalles de la misma si es encontrada.
     def encontrar_detalles(self, id_reserva):
-        # Busca en la lista de reservas por ID y devuelve los detalles si la encuentra
         for reserva in self.reservas:
             if reserva.id_reserva == id_reserva:
                 return f"Reserva ID: {reserva.id_reserva}, Fecha: {reserva.fecha}, Hora: {reserva.hora}, Numero de Personas: {reserva.numero_personas}"

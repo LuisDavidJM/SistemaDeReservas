@@ -27,7 +27,7 @@ class RestauranteApp(QMainWindow):
         self.tabWidget.addTab(self.tabVerReserva, "Ver Reservas")
         self.tabWidget.addTab(self.tabGestionarCapacidad, "Gestionar Capacidad")
 
-        # Inicialización de entidades
+        # Inicializa las entidades principales de la aplicación.
         self.restaurante = Restaurante("El Buen Sabor", "Calle Principal #123")
         self.propietario = Propietario("Juan Pérez", "ID001", "juan@elbuensor.com", "555-1000", True, True)
         self.mesero = Mesero("Ana Gómez", "ID002", "ana@elbuensor.com", "555-2000", ["Mañana"], "Sección A")
@@ -37,27 +37,32 @@ class RestauranteApp(QMainWindow):
         self.idCliente = 0
         self.idReserva = 0
         self.numMesa = 0
-
         self.infoVerReservas = ""
 
         self.initUI()
 
+    # Configura la interfaz de usuario, creando las pestañas y sus contenidos.
     def initUI(self):
 
-        # Agregar encabezado con información del restaurante
+        # Configura el encabezado y los estilos de la aplicación.
         self.headerLabel = QLabel(f"Bienvenido al Restaurante 'El Buen Sabor' - Calle Principal #123")
-        self.headerLabel.setStyleSheet("font-size: 26px; font-weight: bold;")
+        self.headerLabel.setStyleSheet("""
+                                            QLabel {
+                                                color: black;
+                                                background-color: gray;
+                                                font-size: 26px; 
+                                                font-weight: bold;
+                                                padding: 30px 0px;
+                                            }
+                                        """)
         self.layout = QVBoxLayout()
         self.layout.addWidget(self.headerLabel)
-        
-        # Asegúrate de añadir las pestañas al layout principal
         self.layout.addWidget(self.tabWidget)
-        # Establece el layout principal en el widget central
         centralWidget = QWidget()
         centralWidget.setLayout(self.layout)
         self.setCentralWidget(centralWidget)
 
-        # Tab Hacer Reserva
+        # Configura la pestaña "Hacer Reserva" con los campos necesarios para realizar una reserva.
         layoutHacerReserva = QFormLayout()
         self.labelCliente = QLabel()
         self.labelInfoReserva = QLabel()
@@ -83,7 +88,7 @@ class RestauranteApp(QMainWindow):
         layoutHacerReserva.addRow(self.reservarBtn)
         self.tabHacerReserva.setLayout(layoutHacerReserva)
         
-        # Tab Ver Reserva
+        # Configura la pestaña "Ver Reserva" para mostrar las reservas existentes.
         layoutReservas = QVBoxLayout()
         self.verReservasBtn = QPushButton("Ver Reservas")
         self.layoutVerReserva = QTextEdit(self)
@@ -92,21 +97,36 @@ class RestauranteApp(QMainWindow):
         layoutReservas.addWidget(self.layoutVerReserva)
         self.tabVerReserva.setLayout(layoutReservas)
         
-        # Tab Gestionar Capacidad
+        # Configura la pestaña "Gestionar Capacidad" para ver y ajustar la capacidad del restaurante.
         layoutGestionarCapacidad = QVBoxLayout()
-        self.capacidadInput = QLineEdit()
-        self.actualizarCapacidadBtn = QPushButton("Actualizar Capacidad")
+        self.layoutVerCapacidad = QTextEdit(self)
+        self.layoutVerCapacidad.setReadOnly(True)  # Hacerlo solo lectura
+        self.verCapacidadBtn = QPushButton("Ver configuración actual")
+        layoutGestionarCapacidad.addWidget(self.verCapacidadBtn)
+        layoutGestionarCapacidad.addWidget(self.layoutVerCapacidad)
+
         layoutGestionarCapacidad.addWidget(QLabel("Nueva Capacidad:"))
+        self.capacidadInput = QLineEdit()
         layoutGestionarCapacidad.addWidget(self.capacidadInput)
+        layoutGestionarCapacidad.addWidget(QLabel("Nueva Fecha de operación:"))
+        self.horarioInput = QLineEdit()
+        layoutGestionarCapacidad.addWidget(self.horarioInput)
+        self.actualizarCapacidadBtn = QPushButton("Actualizar capacidad")
         layoutGestionarCapacidad.addWidget(self.actualizarCapacidadBtn)
+
+        self.disposicionBtn = QPushButton("Consultar dispocisión")
+        layoutGestionarCapacidad.addWidget(self.disposicionBtn)
+
         self.tabGestionarCapacidad.setLayout(layoutGestionarCapacidad)
         
-        # Conectar botones a acciones
-        
+        # Conecta los botones a sus respectivos métodos.
         self.reservarBtn.clicked.connect(self.hacerReserva)
-        self.actualizarCapacidadBtn.clicked.connect(self.gestionarCapacidad)
         self.verReservasBtn.clicked.connect(self.mostrarReserva)
+        self.verCapacidadBtn.clicked.connect(self.gestionarCapacidad)
+        self.actualizarCapacidadBtn.clicked.connect(self.actualizarCambios)
+        self.disposicionBtn.clicked.connect(self.disposicion)
 
+    # Crea una reserva basada en la información proporcionada por el usuario.
     def hacerReserva(self):
         nombreCliente = self.nombreCliente.text()
         correoCliente = self.correoCliente.text()
@@ -115,16 +135,12 @@ class RestauranteApp(QMainWindow):
         fecha = self.fechaInput.text()
         hora = self.horaInput.text()
         numero_personas = int(self.personasInput.text())
-        # Aquí podrías generar un ID de reserva único, por ejemplo:
         self.idReserva += 1
         
-        # Crear la nueva reserva y agregarla a las entidades relevantes
+        # Lógica para crear una reserva y actualizar la información mostrada al usuario.
         cliente = Cliente(nombreCliente, correoCliente, telefonoCliente, self.idCliente)
-        
         mesajeReservaSolicitada = cliente.solicitar_reserva(fecha, hora, numero_personas)
-
         self.verReserva(mesajeReservaSolicitada, cliente.pedir_informacion())
-
         self.mesajeReservaSolicitada = QMessageBox()
         self.mesajeReservaSolicitada.about(self, "", mesajeReservaSolicitada)
 
@@ -155,7 +171,6 @@ class RestauranteApp(QMainWindow):
         
         self.mesajeConfirmacion.about(self, cliente.nombre, mensajeConfirmacion)
             
-        # Actualizar la interfaz de usuario según sea necesario, por ejemplo, limpiar campos de entrada
         self.nombreCliente.clear()
         self.correoCliente.clear()
         self.telefonoCliente.clear()
@@ -163,24 +178,38 @@ class RestauranteApp(QMainWindow):
         self.horaInput.clear()
         self.personasInput.clear()
 
+    # Prepara y guarda la información de las reservas existentes.
     def verReserva(self, mesajeReservaSolicitada, informacion):
         self.infoVerReservas += informacion + "\n" + mesajeReservaSolicitada + "\n\n"
 
+    # Muestra la información acumulada de las reservas en la interfaz de usuario.
     def mostrarReserva(self):
         if(self.infoVerReservas == ""):
             self.layoutVerReserva.setText("No hay reservas registradas")
         else:
             self.layoutVerReserva.setText(self.infoVerReservas)
-        
+
+    # Solicita y muestra la configuración actual del restaurante.  
     def gestionarCapacidad(self):
         confActual = self.propietario.solicitar_confi_actual(self.configuracion)
-        print(confActual)
+        self.layoutVerCapacidad.setText(confActual)
 
-        disposicion = self.configuracion.consultar_disposicion()
-        print(disposicion)
+    # Aplica y refleja los cambios realizados a la capacidad y horarios del restaurante.
+    def actualizarCambios(self):
+        cambios = self.propietario.decidir_cambios(self.restaurante, self.capacidadInput, self.horarioInput)
+        self.configuracion.capacidad_maxima = self.capacidadInput.text()
+        self.configuracion.horarios_operacion = self.horarioInput.text()
+        self.layoutVerCapacidad.setText("")
+        self.capacidadInput.clear()
+        self.horarioInput.clear()
+        self.mesajeActualizacion = QMessageBox()
+        self.mesajeActualizacion.about(self, "Cambios", cambios)
 
-        cambios = self.propietario.decidir_cambios(self.restaurante, 30, "9:00-20:00")
-        print(cambios)
+    # Consulta y muestra la disposición actual de las mesas en el restaurante.
+    def disposicion(self):
+        capacidad = self.configuracion.consultar_disposicion()
+        self.mesajeDisposicion = QMessageBox()
+        self.mesajeDisposicion.about(self, "Disposición", capacidad)
 
 def main():
     app = QApplication(sys.argv)

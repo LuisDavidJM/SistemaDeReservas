@@ -5,8 +5,9 @@ class Empleado:
         self.correo_electronico = correo_electronico
         self.telefono = telefono
 
+    # Permite actualizar el correo electrónico y/o el número de teléfono del empleado.
+    # Devuelve un mensaje indicando qué información se actualizó.
     def rectificar_cambios(self, nuevo_correo=None, nuevo_telefono=None):
-        # Actualiza el correo electrónico y/o el número de teléfono del empleado si se proporcionan nuevos valores
         if nuevo_correo:
             self.correo_electronico = nuevo_correo
             return f"Correo electrónico actualizado a {self.correo_electronico} para el empleado {self.nombre}."

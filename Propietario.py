@@ -7,12 +7,12 @@ class Propietario(Empleado):
         self.acceso_total = acceso_total
         self.email_notificaciones = email_notificaciones
 
+    # Solicita y devuelve la configuración actual del restaurante.
     def solicitar_confi_actual(self, configuracion_restaurante):
-        # Imprime la configuración actual del restaurante directamente
         return f"Configuración actual del restaurante: Capacidad máxima: {configuracion_restaurante.capacidad_maxima}, Horarios de operación: {configuracion_restaurante.horarios_operacion}"
 
+    # Decide y aplica cambios a la configuración del restaurante si se tiene acceso total.
     def decidir_cambios(self, configuracion_restaurante, nueva_capacidad_maxima=None, nuevos_horarios_operacion=None):
-        # Aplica cambios en la configuración del restaurante directamente
         if self.acceso_total:
             if nueva_capacidad_maxima is not None:
                 configuracion_restaurante.capacidad_maxima = nueva_capacidad_maxima
