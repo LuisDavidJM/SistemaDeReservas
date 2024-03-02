@@ -153,8 +153,6 @@ class RestauranteApp(QMainWindow):
         self.configuracion.agregar_mesa(mesa)
         disponibilidad = self.configuracion.verificar_disponibilidad()
         if(len(self.calendario.reservas) > 1):
-            print(self.calendario.reservas[self.numMesa -2].fecha)
-            print(self.calendario.reservas[self.numMesa -2].hora)
             if((self.calendario.reservas[self.numMesa -2].fecha == fecha) and (self.calendario.reservas[self.numMesa -2].hora == hora)):
                 disponibilidad = False
             else:
