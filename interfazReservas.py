@@ -134,24 +134,24 @@ class RestauranteApp(QMainWindow):
         self.idCliente += 1
         fecha = self.fechaInput.text()
         hora = self.horaInput.text()
-        numero_personas = int(self.personasInput.text())
+        numeroDePersonas = int(self.personasInput.text())
         self.idReserva += 1
         
         # Lógica para crear una reserva y actualizar la información mostrada al usuario.
         cliente = Cliente(nombreCliente, correoCliente, telefonoCliente, self.idCliente)
-        mesajeReservaSolicitada = cliente.solicitar_reserva(fecha, hora, numero_personas)
-        self.verReserva(mesajeReservaSolicitada, cliente.pedir_informacion())
+        mesajeReservaSolicitada = cliente.solicitarReserva(fecha, hora, numeroDePersonas)
+        self.verReserva(mesajeReservaSolicitada, cliente.pedirInformacion())
         self.mesajeReservaSolicitada = QMessageBox()
         self.mesajeReservaSolicitada.about(self, "", mesajeReservaSolicitada)
 
-        mesajeReservaHecha = self.mesero.hacer_reserva(self.calendario, fecha, hora, numero_personas, self.idReserva)
+        mesajeReservaHecha = self.mesero.hacerReserva(self.calendario, fecha, hora, numeroDePersonas, self.idReserva)
 
         self.mesajeConfirmacion = QMessageBox()
 
         self.numMesa += 1
-        mesa = Mesa(self.numMesa, numero_personas, "", True)
-        self.configuracion.agregar_mesa(mesa)
-        disponibilidad = self.configuracion.verificar_disponibilidad()
+        mesa = Mesa(self.numMesa, numeroDePersonas, "", True)
+        self.configuracion.agregarMesa(mesa)
+        disponibilidad = self.configuracion.verificarDisponibilidad()
         if(len(self.calendario.reservas) > 1):
             if((self.calendario.reservas[self.numMesa -2].fecha == fecha) and (self.calendario.reservas[self.numMesa -2].hora == hora)):
                 disponibilidad = False
@@ -159,13 +159,13 @@ class RestauranteApp(QMainWindow):
                 disponibilidad = True
 
         if(disponibilidad == True):
-            mesa.informar_disponibilidad()
-            self.configuracion.reserva_confirmada(self.numMesa)
-            mensajeConfirmacion = self.mesero.informar_reserva_confirmada(self.idReserva)
+            mesa.informarDisponibilidad()
+            self.configuracion.reservaConfirmada(self.numMesa)
+            mensajeConfirmacion = self.mesero.informarReservaConfirmada(self.idReserva)
         else:
-            mesa.informar_no_disponibilidad()
-            self.configuracion.reserva_no_disponible(self.numMesa)
-            mensajeConfirmacion = self.mesero.informar_reserva_no_disponible(fecha, hora)
+            mesa.informarNoDisponibilidad()
+            self.configuracion.reservaNoDisponible(self.numMesa)
+            mensajeConfirmacion = self.mesero.informarReservaNoDisponible(fecha, hora)
         
         self.mesajeConfirmacion.about(self, cliente.nombre, mensajeConfirmacion)
             
@@ -189,14 +189,14 @@ class RestauranteApp(QMainWindow):
 
     # Solicita y muestra la configuración actual del restaurante.  
     def gestionarCapacidad(self):
-        confActual = self.propietario.solicitar_confi_actual(self.configuracion)
+        confActual = self.propietario.solicitarConfActual(self.configuracion)
         self.layoutVerCapacidad.setText(confActual)
 
     # Aplica y refleja los cambios realizados a la capacidad y horarios del restaurante.
     def actualizarCambios(self):
-        cambios = self.propietario.decidir_cambios(self.restaurante, self.capacidadInput, self.horarioInput)
-        self.configuracion.capacidad_maxima = self.capacidadInput.text()
-        self.configuracion.horarios_operacion = self.horarioInput.text()
+        cambios = self.propietario.decidirCambios(self.restaurante, self.capacidadInput, self.horarioInput)
+        self.configuracion.capacidadMaxima = self.capacidadInput.text()
+        self.configuracion.horariosOperacion = self.horarioInput.text()
         self.layoutVerCapacidad.setText("")
         self.capacidadInput.clear()
         self.horarioInput.clear()
@@ -205,7 +205,7 @@ class RestauranteApp(QMainWindow):
 
     # Consulta y muestra la disposición actual de las mesas en el restaurante.
     def disposicion(self):
-        capacidad = self.configuracion.consultar_disposicion()
+        capacidad = self.configuracion.consultarDisposicion()
         self.mesajeDisposicion = QMessageBox()
         self.mesajeDisposicion.about(self, "Disposición", capacidad)
 
